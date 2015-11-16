@@ -20,7 +20,7 @@
 if &cp || exists("g:loaded_netrwPlugin")
  finish
 endif
-let g:loaded_netrwPlugin = "v154e"
+let g:loaded_netrwPlugin = "v155a"
 let s:keepcpo = &cpo
 set cpo&vim
 "DechoRemOn
@@ -90,9 +90,9 @@ if !exists("g:netrw_nogx")
   vno <silent> <Plug>NetrwBrowseXVis :<c-u>call netrw#BrowseXVis()<cr>
  endif
 endif
-if !exists("g:netrw_notab")
- if maparg('<tab>','n') == ""
-  nmap <unique> <tab> <Plug>NetrwShrink
+if exists("g:netrw_usetab") && g:netrw_usetab
+ if maparg('<c-tab>','n') == ""
+  nmap <unique> <c-tab> <Plug>NetrwShrink
  endif
  nno <silent> <Plug>NetrwShrink :call netrw#Shrink()<cr>
 endif

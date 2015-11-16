@@ -1,4 +1,4 @@
-*pi_netrw.txt*  For Vim version 7.4.  Last change: 2015 Jun 29
+*pi_netrw.txt*  For Vim version 7.4.  Last change: 2015 Oct 29
 
 	    ------------------------------------------------
 	    NETRW REFERENCE MANUAL    by Charles E. Campbell
@@ -1072,7 +1072,7 @@ QUICK REFERENCE: MAPS				*netrw-browse-maps* {{{2
 	 <c-h>	Edit file hiding list                                |netrw-ctrl-h|
 	 <c-l>	Causes Netrw to refresh the directory listing        |netrw-ctrl-l|
 	 <c-r>	Browse using a gvim server                           |netrw-ctrl-r|
-	 <tab>	Shrink/expand a netrw/explore window                 |netrw-tab|
+	 <c-tab> Shrink/expand a netrw/explore window                |netrw-c-tab|
 	   -	Makes Netrw go up one directory                      |netrw--|
 	   a	Toggles between normal display,                      |netrw-a|
 	    	hiding (suppress display of files matching g:netrw_list_hide)
@@ -1183,10 +1183,10 @@ Addtionally, one may use :NetrwMB to bookmark files or directories. >
 < No bang: enters files/directories into Netrw's bookmark system
 
    No argument and in netrw buffer:
-     if there are marked files: bookmark marked files
-     otherwise                : bookmark file/directory under cursor
+     if there are marked files        : bookmark marked files
+     otherwise                        : bookmark file/directory under cursor
    No argument and not in netrw buffer: bookmarks current open file
-   Has arguments: globs them individually and bookmarks them
+   Has arguments                      : |glob()|s each arg and bookmarks them
 
  With bang: deletes files/directories from Netrw's bookmark system
 
@@ -1429,7 +1429,7 @@ See |g:netrw_dirhistmax| for how to control the quantity of history stack
 slots.
 
 
-CHANGING TREE TOP			*netrw-ntree* *:Ntree* *netrw-gn* {{{2
+CHANGING TREE TOP			*netrw-ntree*  *:Ntree*  *netrw-gn* {{{2
 
 One may specify a new tree top for tree listings using >
 
@@ -1656,7 +1656,7 @@ DIRECTORY EXPLORATION COMMANDS  {{{2
 
 	  Also see: |netrw-C|           |g:netrw_browse_split|   |g:netrw_wiw|
 		    |netrw-p| |netrw-P|   |g:netrw_chgwin|
-		    |netrw-tab|         |g:netrw_winsize|
+		    |netrw-c-tab|       |g:netrw_winsize|
 
 :[N]Lexplore! is like :Lexplore, except that the full-height Explorer window
 	  will open on the right hand side and an uninitialized |g:netrw_chgwin|
@@ -2758,10 +2758,10 @@ your browsing preferences.  (see also: |netrw-settings|)
 				evaluation will be suppressed
 				(see |'ballooneval'|)
 
-  *g:netrw_notab*		if this variable exists, then the <tab>
-				map supporting shrinking/expanding a
-				Lexplore or netrw window will be disabled.
-				(see |netrw-tab|)
+  *g:netrw_usetab*		if this variable exists and is non-zero, then
+				the <tab> map supporting shrinking/expanding a
+				Lexplore or netrw window will be enabled.
+				(see |netrw-c-tab|)
 
   *g:netrw_remote_mkdir*	command for making a remote directory
 				via ftp  (also see |g:netrw_mkdir_cmd|)
@@ -2914,7 +2914,7 @@ your browsing preferences.  (see also: |netrw-settings|)
 
   *g:netrw_wiw*			=1 specifies the minimum window width to use
 				when shrinking a netrw/Lexplore window
-				(see |netrw-tab|).
+				(see |netrw-c-tab|).
 
   *g:netrw_xstrlen*		Controls how netrw computes string lengths,
 				including multi-byte characters' string
@@ -2961,7 +2961,7 @@ help on what each of the variables do.
 
 
 ==============================================================================
-OBTAINING A FILE					*netrw-O* {{{2
+OBTAINING A FILE					*netrw-obtain* *netrw-O* {{{2
 
 If there are no marked files:
 
@@ -2991,7 +2991,7 @@ Related topics:
  * To automatically make the currently browsed directory the current
    directory, see |g:netrw_keepdir|.
 
-							*netrw-createfile*
+					*netrw-newfile* *netrw-createfile*
 OPEN A NEW FILE IN NETRW'S CURRENT DIRECTORY		*netrw-%* {{{2
 
 To open a new file in netrw's current directory, press "%".  This map
@@ -3029,7 +3029,7 @@ These will:
 Also see: |g:netrw_chgwin| |netrw-P| |'previewwindow'|
 
 
-PREVIOUS WINDOW				*netrw-P* *netrw-prvwin* {{{2
+PREVIOUS WINDOW					*netrw-P* *netrw-prvwin* {{{2
 
 To edit a file or directory in the previously used (last accessed) window (see
 :he |CTRL-W_p|), press a "P".  If there's only one window, then the one window
@@ -3051,7 +3051,7 @@ Associated setting variables:
 Also see: |g:netrw_chgwin| |netrw-p|
 
 
-REFRESHING THE LISTING			*netrw-ctrl-l* *netrw-ctrl_l* {{{2
+REFRESHING THE LISTING		*netrw-refresh* *netrw-ctrl-l* *netrw-ctrl_l* {{{2
 
 To refresh either a local or remote directory listing, press ctrl-l (<c-l>) or
 hit the <cr> when atop the ./ directory entry in the listing.  One may also
@@ -3128,7 +3128,7 @@ Related topics:               |netrw-r| |netrw-S|
 Associated setting variables: |g:netrw_sort_by| |g:netrw_sort_sequence|
 
 
-SETTING EDITING WINDOW				*netrw-C* *netrw-:NetrwC* {{{2
+SETTING EDITING WINDOW		*netrw-editwindow* *netrw-C* *netrw-:NetrwC* {{{2
 
 One may select a netrw window for editing with the "C" mapping, using the
 :NetrwC [win#] command, or by setting |g:netrw_chgwin| to the selected window
@@ -3156,9 +3156,12 @@ Related topics:			|netrw-cr| |g:netrw_browse_split|
 Associated setting variables:	|g:netrw_chgwin|
 
 
-SHRINKING OR EXPANDING A NETRW OR LEXPLORE WINDOW	*netrw-tab* {{{2
+SHRINKING OR EXPANDING A NETRW OR LEXPLORE WINDOW	*netrw-c-tab* {{{2
 
-The <tab> key will toggle a netrw or |:Lexplore| window's width.
+The <c-tab> key will toggle a netrw or |:Lexplore| window's width,
+but only if |g:netrw_usetab| exists and is non-zero (and, of course,
+only if your terminal supports differentiating <c-tab> from a plain
+<tab>).
 
   * If the current window is a netrw window, toggle its width
     (between |g:netrw_wiw| and its original width)
@@ -3168,31 +3171,40 @@ The <tab> key will toggle a netrw or |:Lexplore| window's width.
 
   * Else bring up a |:Lexplore| window
 
-If |g:netrw_notab| exists or there is a pre-existing mapping for
-<tab>, then the <tab> will not be mapped.  One may map something
-else: >
+If |g:netrw_usetab| exists or is zero, or if there is a pre-existing mapping
+for <c-tab>, then the <tab> will not be mapped.  One may map something other
+than a <c-tab>, too: (but you'll still need to have had g:netrw_usetab set) >
+
 	nmap <unique> (whatever)	<Plug>NetrwShrink
 <
 Related topics:			|:Lexplore|
-Associated setting variable:	|g:netrw_notab|
+Associated setting variable:	|g:netrw_usetab|
 
 
 USER SPECIFIED MAPS					*netrw-usermaps* {{{1
 
-One may specify customized user maps.  Specify a variable, |g:Netrw_UserMaps|,
+One may make customized user maps.  Specify a variable, |g:Netrw_UserMaps|,
 to hold a |List| of lists of keymap strings and function names: >
 
-	[["keymap-sequence","function-name"],...]
+	[["keymap-sequence","ExampleUserMapFunc"],...]
 <
 When netrw is setting up maps for a netrw buffer, if |g:Netrw_UserMaps|
-exists, then |:nnoremap|s will be set up to activate when given the
-keymap sequence, and will call the user-specified function, >
+exists, then the internal function netrw#UserMaps(islocal) is called.
+This function goes through all the entries in the |g:Netrw_UserMaps| list:
 
-	call s:Usermaps(islocal,function-reference)
-<
-The user function resembles >
+	* sets up maps: >
+		nno <buffer> <silent> KEYMAP-SEQUENCE
+		:call s:UserMaps(islocal,"ExampleUserMapFunc")
+<	* refreshes if result from that function call is the string
+	  "refresh"
+	* if the result string is not "", then that string will be
+	  executed (:exe result)
+	* if the result is a List, then the above two actions on results
+	  will be taken for every string in the result List
 
-	fun! UserFunction(islocal)
+The user function is passed one argument; it resembles >
+
+	fun! ExampleUserMapFunc(islocal)
 <
 where a:islocal is 1 if its a local-directory system call or 0 when
 remote-directory system call.
@@ -3396,6 +3408,7 @@ Example: Clear netrw's marked file list via a mapping on gu >
 		The first one (|g:netrw_ssh_cmd|) is the most important; most
 		of the others will use the string in g:netrw_ssh_cmd by
 		default.
+
 						*netrw-p9* *netrw-ml_get*
 	P9. I'm browsing, changing directory, and bang!  ml_get errors
 	    appear and I have to kill vim.  Any way around this?
@@ -3422,6 +3435,14 @@ Example: Clear netrw's marked file list via a mapping on gu >
 	P11. I want to have two windows; a thin one on the left and my editing
 	     window on the right.  How may I accomplish this?
 
+	     You probably want netrw running as in a side window.  If so, you
+	     will likely find that |:[N]Lexplore| does what you want.  The
+	     optional "[N]" allows you to select the quantity of columns you
+	     wish the Lexplorer window to start with (see |g:netrw_winsize|
+	     for how this parameter works).
+
+	     Previous solution:
+
 		* Put the following line in your <.vimrc>:
 			let g:netrw_altv = 1
 		* Edit the current directory:  :e .
@@ -3434,6 +3455,7 @@ Example: Clear netrw's marked file list via a mapping on gu >
 		  and |netrw-P|).  If you're using gvim, you can press
 		  <leftmouse> in the browser window and then press the
 		  <middlemouse> to select the file.
+
 
 								*netrw-p12*
 	P12. My directory isn't sorting correctly, or unwanted letters are
@@ -3569,6 +3591,24 @@ Example: Clear netrw's marked file list via a mapping on gu >
 
 			au FileType netrw set enc=latin1
 <
+								*netrw-P22*
+	P22. I get an error message when I try to copy or move a file:
+
+		**error** (netrw) tried using g:netrw_localcopycmd<cp>; it doesn't work!
+
+	     What's wrong?
+
+	     Netrw uses several system level commands to do things (see
+
+		 |g:netrw_localcopycmd|, |g:netrw_localmovecmd|,
+		 |g:netrwlocalrmdir|, |g:netrw_mkdir_cmd|).
+
+	    You may need to adjust the default commands for one or more of
+	    these commands by setting them properly in your .vimrc.  Another
+	    source of difficulty is that these commands use vim's local
+	    directory, which may not be the same as the browsing directory
+	    shown by netrw (see |g:netrw_keepdir|).
+
 
 ==============================================================================
 11. Debugging Netrw Itself				*netrw-debug* {{{1
@@ -3660,6 +3700,10 @@ netrw:
 ==============================================================================
 12. History						*netrw-history* {{{1
 
+	v155:	Oct 29, 2015	* (Timur Fayzrakhmanov) reported that netrw's
+				  mapping of ctrl-l was not allowing refresh of
+				  other windows when it was done in a netrw
+				  window.
 	v154:	Feb 26, 2015	* (Yuri Kanivetsky) reported a situation where
 				  a file was not treated properly as a file
 				  due to g:netrw_keepdir == 1
@@ -3678,6 +3722,28 @@ netrw:
 				  window.  Fixed.
 		Jun 29, 2015	* Attempting to delete a file remotely caused
 				  an error with "keepsol" mentioned; fixed.
+		Jul 08, 2015	* Several changes to keep the |:jumps| table
+				  correct when working with
+				  |g:netrw_fastbrowse| set to 2
+				* wide listing with accented characters fixed
+				  (using %-S instead of %-s with a |printf()|
+		Jul 13, 2015	* (Daniel Hahler) CheckIfKde() could be true
+				  but kfmclient not installed.  Changed order
+				  in netrw#BrowseX(): checks if kde and
+				  kfmclient, then will use xdg-open on a unix
+				  system (if xdg-open is executable)
+		Aug 11, 2015	* (McDonnell) tree listing mode wouldn't
+				  select a file in a open subdirectory.
+				* (McDonnell) when multiple subdirectories
+				  were concurrently open in tree listing
+				  mode, a ctrl-L wouldn't refresh properly.
+				* The netrw:target menu showed duplicate
+				  entries
+		Oct 13, 2015	* (mattn) provided an exception to handle
+				  windows with shellslash set but no shell
+		Oct 23, 2015	* if g:netrw_usetab and <c-tab> now used
+				  to control whether NetrwShrink is used
+				  (see |netrw-c-tab|)
 	v153:	May 13, 2014	* added another |g:netrw_ffkeep| usage {{{2
 		May 14, 2014	* changed s:PerformListing() so that it
 				  always sets ft=netrw for netrw buffers
